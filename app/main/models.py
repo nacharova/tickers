@@ -1,21 +1,20 @@
 # -*- coding: utf-8 -*-
 from .. import db
-
 from sqlalchemy import Integer
 from sqlalchemy import String
-from sqlalchemy import Date
+from sqlalchemy import Float
 
 
 class Tickers(db.Model):
     __tablename__ = "tickers"
     id = db.Column(Integer, primary_key=True)
     name = db.Column(String(1024), default="")
-    date = db.Column(Date, default="")
-    open =  db.Column(Integer, default=0)
-    high =  db.Column(Integer, default=0)
-    low =  db.Column(Integer, default=0)
-    close_last =  db.Column(Integer, default=0)
-    volume =  db.Column(Integer, default=0)
+    date = db.Column(String(1024), default="")
+    open = db.Column(Float, default=0)
+    high = db.Column(Float, default=0)
+    low = db.Column(Float, default=0)
+    close_last = db.Column(Float, default=0)
+    volume = db.Column(Integer, default=0)
 
     @staticmethod
     def add(name, date, open, high, low, close_last, volume):
@@ -28,7 +27,6 @@ class Tickers(db.Model):
                           volume=volume,
                           )
         db.session.add(tickers)
-        db.session.commit()
         return tickers.id
 
     def __repr__(self):
