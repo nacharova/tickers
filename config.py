@@ -44,7 +44,7 @@ class Config:
 #  настройки для разработки
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///data-dev.sqlite'
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://tickers:tickers@192.168.0.71/postgres'
 
 
 #  настройки для тестирования
