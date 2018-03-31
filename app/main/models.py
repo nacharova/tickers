@@ -18,6 +18,7 @@ class Ticker(db.Model):
         ticker = Ticker(name=name,
                         )
         db.session.add(ticker)
+        db.session.commit()
         return ticker.id
 
     def __repr__(self):
@@ -33,12 +34,12 @@ class Price(db.Model):
     id = db.Column(Integer, primary_key=True)
     ticker_id = db.Column(Integer, ForeignKey(Ticker.id), nullable=False)
     ticker = db.relationship("Ticker")
-    date = db.Column(String(1024), default="")
-    open_price = db.Column(Float, default=0)
-    high = db.Column(Float, default=0)
-    low = db.Column(Float, default=0)
-    close_last = db.Column(Float, default=0)
-    volume = db.Column(Integer, default=0)
+    date = db.Column(Date, nullable=False)
+    open_price = db.Column(Float, nullable=True)
+    high = db.Column(Float, nullable=True)
+    low = db.Column(Float, nullable=True)
+    close_last = db.Column(Float, nullable=True)
+    volume = db.Column(Integer, nullable=True)
 
     @staticmethod
     def add(ticker, date, open_price, high, low, close_last, volume):
@@ -51,6 +52,7 @@ class Price(db.Model):
                       volume=volume,
                       )
         db.session.add(price)
+        db.session.commit()
         return price.id
 
     def __repr__(self):
@@ -84,6 +86,8 @@ class Insider(db.Model):
 class InsiderTrade(db.Model):
     __tablename__ = 'insider_trade'
     id = db.Column(Integer, primary_key=True)
+    ticker_id = db.Column(Integer, ForeignKey(Ticker.id), nullable=False)
+    ticker = db.relationship("Ticker")
     insider_id = db.Column(Integer, ForeignKey(Insider.id), nullable=False)
     insider = db.relationship("Insider")
     relation = db.Column(String(1024), default="")
@@ -95,8 +99,9 @@ class InsiderTrade(db.Model):
     shares_held = db.Column(Integer, default=0)
 
     @staticmethod
-    def add(insider, relation, last_date, transaction_type, owner_type, shares_traded, last_price, shares_held):
-        insider_trade = InsiderTrade(insider=insider,
+    def add(ticker, insider, relation, last_date, transaction_type, owner_type, shares_traded, last_price, shares_held):
+        insider_trade = InsiderTrade(ticker=ticker,
+                                     insider=insider,
                                      relation=relation,
                                      last_date=last_date,
                                      transaction_type=transaction_type,

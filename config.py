@@ -65,7 +65,7 @@ class ProductionConfig(Config):
     if base_passwd:
         SQLALCHEMY_DATABASE_URI = 'mysql://%s:%s@%s/%s'.format() % (base_user, base_passwd, base_host, base_name)
     else:
-        SQLALCHEMY_DATABASE_URI = 'sqlite:///data-dev.sqlite'
+        SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://tickers:tickers@192.168.0.71/postgres'
 
 
 #  варианты настроек, используються в __init__.py при вызове create_app из manage.py
