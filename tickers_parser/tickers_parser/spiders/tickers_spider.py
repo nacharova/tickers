@@ -26,7 +26,7 @@ class TickersSpider(scrapy.Spider):
             item = TickersParserItem()
             item['name'] = response.url.split('/')[-2]
             item['date'] = cols[0]
-            item['open'] = cols[1]
+            item['open_price'] = cols[1]
             item['high'] = cols[2]
             item['low'] = cols[3]
             item['close_last'] = cols[4]

@@ -3,40 +3,113 @@ from .. import db
 from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy import Float
+from sqlalchemy import Date
+from sqlalchemy import ForeignKey
 
 
-class Tickers(db.Model):
-    __tablename__ = "tickers"
+# справочник с названиями акций
+class Ticker(db.Model):
+    __tablename__ = 'ticker'
     id = db.Column(Integer, primary_key=True)
     name = db.Column(String(1024), default="")
+
+    @staticmethod
+    def add(name):
+        ticker = Ticker(name=name,
+                        )
+        db.session.add(ticker)
+        return ticker.id
+
+    def __repr__(self):
+        return '<Ticker %s>' % str(self.name)
+
+    def __str__(self):
+        return self.name
+
+
+# цены на акции
+class Price(db.Model):
+    __tablename__ = 'price'
+    id = db.Column(Integer, primary_key=True)
+    ticker_id = db.Column(Integer, ForeignKey(Ticker.id), nullable=False)
+    ticker = db.relationship("Ticker")
     date = db.Column(String(1024), default="")
-    open = db.Column(Float, default=0)
+    open_price = db.Column(Float, default=0)
     high = db.Column(Float, default=0)
     low = db.Column(Float, default=0)
     close_last = db.Column(Float, default=0)
     volume = db.Column(Integer, default=0)
 
     @staticmethod
-    def add(name, date, open, high, low, close_last, volume):
-        tickers = Tickers(name=name,
-                          date=date,
-                          open=open,
-                          high=high,
-                          low=low,
-                          close_last=close_last,
-                          volume=volume,
-                          )
-        db.session.add(tickers)
-        return tickers.id
+    def add(ticker, date, open_price, high, low, close_last, volume):
+        price = Price(ticker=ticker,
+                      date=date,
+                      open_price=open_price,
+                      high=high,
+                      low=low,
+                      close_last=close_last,
+                      volume=volume,
+                      )
+        db.session.add(price)
+        return price.id
 
     def __repr__(self):
-        return '<Tickers %s>' % str(self.name)
+        return '<Price %s>' % str(self.close_last)
+
+    def __str__(self):
+        return self.close_last
+
+
+# справочник с инсайдерами
+class Insider(db.Model):
+    __tablename__ = 'insider'
+    id = db.Column(Integer, primary_key=True)
+    name = db.Column(String(1024), default="")
+
+    @staticmethod
+    def add(name):
+        insider = Insider(name=name,
+                          )
+        db.session.add(insider)
+        return insider.id
+
+    def __repr__(self):
+        return '<Insider %s>' % str(self.name)
 
     def __str__(self):
         return self.name
 
 
+# инсайдерские сделки
+class InsiderTrade(db.Model):
+    __tablename__ = 'insider_trade'
+    id = db.Column(Integer, primary_key=True)
+    insider_id = db.Column(Integer, ForeignKey(Insider.id), nullable=False)
+    insider = db.relationship("Insider")
+    relation = db.Column(String(1024), default="")
+    last_date = db.Column(Date)
+    transaction_type = db.Column(String(1024), default="")
+    owner_type = db.Column(String(1024), default="")
+    shares_traded = db.Column(Integer, default=0)
+    last_price = db.Column(Integer, default=0)
+    shares_held = db.Column(Integer, default=0)
 
+    @staticmethod
+    def add(insider, relation, last_date, transaction_type, owner_type, shares_traded, last_price, shares_held):
+        insider_trade = InsiderTrade(insider=insider,
+                                     relation=relation,
+                                     last_date=last_date,
+                                     transaction_type=transaction_type,
+                                     owner_type=owner_type,
+                                     shares_traded=shares_traded,
+                                     last_price=last_price,
+                                     shares_held=shares_held,
+                                     )
+        db.session.add(insider_trade)
+        return insider_trade.id
 
+    def __repr__(self):
+        return '<InsiderTrade %s>' % str(self.last_price)
 
-
+    def __str__(self):
+        return self.last_price

@@ -11,7 +11,7 @@ import scrapy
 class TickersParserItem(scrapy.Item):
     name = scrapy.Field()
     date = scrapy.Field()
-    open = scrapy.Field()
+    open_price = scrapy.Field()
     high = scrapy.Field()
     low = scrapy.Field()
     close_last = scrapy.Field()
