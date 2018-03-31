@@ -90,13 +90,13 @@ class InsiderTrade(db.Model):
     ticker = db.relationship("Ticker")
     insider_id = db.Column(Integer, ForeignKey(Insider.id), nullable=False)
     insider = db.relationship("Insider")
-    relation = db.Column(String(1024), default="")
-    last_date = db.Column(Date)
-    transaction_type = db.Column(String(1024), default="")
-    owner_type = db.Column(String(1024), default="")
-    shares_traded = db.Column(Integer, default=0)
-    last_price = db.Column(Integer, default=0)
-    shares_held = db.Column(Integer, default=0)
+    relation = db.Column(String(1024), nullable=True)
+    last_date = db.Column(Date, nullable=False)
+    transaction_type = db.Column(String(1024), nullable=True)
+    owner_type = db.Column(String(1024), nullable=True)
+    shares_traded = db.Column(Integer, nullable=True)
+    last_price = db.Column(Float, nullable=True)
+    shares_held = db.Column(Integer, nullable=True)
 
     @staticmethod
     def add(ticker, insider, relation, last_date, transaction_type, owner_type, shares_traded, last_price, shares_held):

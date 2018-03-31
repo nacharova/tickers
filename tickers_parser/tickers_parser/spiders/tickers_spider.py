@@ -2,6 +2,7 @@ import scrapy
 import os
 from ..items import TickersParserItem
 import datetime
+import re
 
 
 class TickersSpider(scrapy.Spider):
@@ -31,7 +32,6 @@ class TickersSpider(scrapy.Spider):
                 try:
                     date = datetime.datetime.strptime(cols[0], '%m/%d/%Y')
                 except:
-                    import re
                     if re.search(r'\d{1,2}:\d{1,2}', cols[0]):
                         date = datetime.datetime.today()
 
