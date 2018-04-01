@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    {% if difference %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Open</th>
+                    <th>High</th>
+                    <th>Low</th>
+                    <th>Close / Last</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        {{ difference['open_price'] }}
+                    </td>
+                    <td>
+                        {{ difference['high'] }}
+                    </td>
+                    <td>
+                        {{ difference['low'] }}
+                    </td>
+                    <td>
+                        {{ difference['close_last'] }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    {% endif %}
+</body>
+</html>
