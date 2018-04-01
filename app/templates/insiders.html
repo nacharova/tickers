@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+<h1>{{ title }}</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Insider</th>
+        <th>Relation</th>
+        <th>Last Date</th>
+        <th>Transaction Type</th>
+        <th>OwnerType</th>
+        <th>Shares Traded</th>
+        <th>Last Price</th>
+        <th>Shares Held</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for insider in insiders %}
+        <tr>
+            <td>
+                {% if ticker %}
+                    <a href="{{ url_for('main_blueprint.one_insider_view', ticker=ticker, insider_name=insider.insider|lower|replace(' ', '_')) }}">{{ insider.insider }}</a>
+                {% else %}
+                    {{ insider.insider }}
+                {% endif %}
+            </td>
+            <td>
+                {{ insider.relation }}
+            </td>
+            <td>
+                {{ insider.last_date }}
+            </td>
+            <td>
+                {{ insider.transaction_type }}
+            </td>
+            <td>
+                {{ insider.owner_type }}
+            </td>
+            <td>
+                {{ insider.shares_traded }}
+            </td>
+            <td>
+                {{ insider.last_price }}
+            </td>
+            <td>
+                {{ insider.shares_held }}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>

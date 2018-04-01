@@ -2,9 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{{ title }}</title>
 </head>
 <body>
-    <p>Test</p>
+    <h1>Акции</h1>
+    <div>
+        {% for ticker in tickers %}
+            <p><a href="{{ url_for('main_blueprint.ticker_view', ticker=ticker.name) }}">{{ ticker.name }}</a></p>
+        {% endfor %}
+    </div>
 </body>
 </html>

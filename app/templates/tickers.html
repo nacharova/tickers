@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+    <h1>Цены на акцию {{ ticker }} за 3 месяца</h1>
+    <a href="{{ url_for('main_blueprint.insider_view', ticker=ticker) }}">Данные торговли совладельцев компании</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Open</th>
+                <th>High</th>
+                <th>Low</th>
+                <th>Close / Last</th>
+                <th>Volume</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for price in prices %}
+                <tr>
+                    <td>
+                        {{ price.date }}
+                    </td>
+                    <td>
+                        {{ price.open_price }}
+                    </td>
+                    <td>
+                        {{ price.high }}
+                    </td>
+                    <td>
+                        {{ price.low }}
+                    </td>
+                    <td>
+                        {{ price.close_last }}
+                    </td>
+                    <td>
+                        {{ price.volume }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
