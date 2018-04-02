@@ -13,13 +13,8 @@ class Ticker(db.Model):
     id = db.Column(Integer, primary_key=True)
     name = db.Column(String(1024), default="")
 
-    @staticmethod
-    def add(name):
-        ticker = Ticker(name=name,
-                        )
-        db.session.add(ticker)
-        db.session.commit()
-        return ticker.id
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
     def __repr__(self):
         return '<Ticker %s>' % str(self.name)
@@ -41,19 +36,8 @@ class Price(db.Model):
     close_last = db.Column(Float, nullable=True)
     volume = db.Column(Integer, nullable=True)
 
-    @staticmethod
-    def add(ticker, date, open_price, high, low, close_last, volume):
-        price = Price(ticker=ticker,
-                      date=date,
-                      open_price=open_price,
-                      high=high,
-                      low=low,
-                      close_last=close_last,
-                      volume=volume,
-                      )
-        db.session.add(price)
-        db.session.commit()
-        return price.id
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
     def __repr__(self):
         return '<Price %s>' % str(self.close_last)
@@ -68,12 +52,8 @@ class Insider(db.Model):
     id = db.Column(Integer, primary_key=True)
     name = db.Column(String(1024), default="")
 
-    @staticmethod
-    def add(name):
-        insider = Insider(name=name,
-                          )
-        db.session.add(insider)
-        return insider.id
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
     def __repr__(self):
         return '<Insider %s>' % str(self.name)
@@ -98,20 +78,8 @@ class InsiderTrade(db.Model):
     last_price = db.Column(Float, nullable=True)
     shares_held = db.Column(Integer, nullable=True)
 
-    @staticmethod
-    def add(ticker, insider, relation, last_date, transaction_type, owner_type, shares_traded, last_price, shares_held):
-        insider_trade = InsiderTrade(ticker=ticker,
-                                     insider=insider,
-                                     relation=relation,
-                                     last_date=last_date,
-                                     transaction_type=transaction_type,
-                                     owner_type=owner_type,
-                                     shares_traded=shares_traded,
-                                     last_price=last_price,
-                                     shares_held=shares_held,
-                                     )
-        db.session.add(insider_trade)
-        return insider_trade.id
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
     def __repr__(self):
         return '<InsiderTrade %s>' % str(self.last_price)
