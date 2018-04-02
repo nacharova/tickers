@@ -90,3 +90,32 @@ def analytics_view(ticker):
                                title="Данные отсутствуют",
                                )
     return redirect(url_for('.ticker_view', ticker=ticker))
+
+
+@main.route('/<string:ticker>/delta', methods=['GET', 'POST'])
+def delta_view(ticker):
+    type_choices = {'open': 'open_price', 'high': 'high', 'low': 'low', 'close': 'close_last'}
+    results = []
+    if request.method == 'GET':
+        value = int(request.args.get('value', None))
+        type = request.args.get('type', None)
+        if type in type_choices:
+            ticker = Ticker.query.filter(Ticker.name == ticker).first()  # находим нужную акцию
+            all_prices = Price.query.filter(Price.ticker_id == ticker.id).order_by(Price.date).all()
+            for cur_price in all_prices:
+                lost_prices = Price.query.filter(Price.ticker_id == ticker.id).filter(
+                    Price.date > cur_price.date).order_by(Price.date).all()
+                for price in lost_prices:
+                    if getattr(cur_price, type_choices[type]) - getattr(price, type_choices[type]) > value:
+                        results.append("%s - %s" % (cur_price.date, price.date))
+                        break
+            return render_template('delta.html',
+                                   title="Минимальные периоды, когда цена %s (%s) изменялась более чем на %d" % (
+                                   ticker, type, value),
+                                   results=results,
+                                   )
+        return render_template('delta.html',
+                               title="Неправильно указаны параметры (type = open, high, low, close)",
+                               results=results,
+                               )
+    return redirect(url_for('.ticker_view', ticker=ticker))
