@@ -1,18 +1,21 @@
 # coding: utf-8
-from . import main
-from flask import render_template
-from app.main.models import Ticker
-from app.main.models import Price
-from app.main.models import InsiderTrade
-from app.main.models import Insider
-from sqlalchemy import func
 import datetime
+import json
+from flask import render_template
 from flask import request
 from flask import redirect
 from flask import url_for
 from flask import Response
 from flask import abort
-import json
+from sqlalchemy import func
+
+from . import main
+from app.main.models import Ticker
+from app.main.models import Price
+from app.main.models import InsiderTrade
+from app.main.models import Insider
+
+api = 'api'
 
 
 def alchemy_encoder(obj):
@@ -34,8 +37,8 @@ def get_response(items, iterable=True):
 @main.route('/api/', methods=['GET', 'POST'])
 def index():
     tickers = Ticker.query.all()
-    if 'api' in request.url:
-            return get_response(tickers, iterable=False)
+    if api in request.url:
+        return get_response(tickers, iterable=False)
     return render_template('index.html',
                            tickers=tickers,
                            title="Акции",
@@ -48,8 +51,8 @@ def ticker_view(ticker):
     ticker = Ticker.query.filter(Ticker.name == ticker).first()
     prices = Price.query.filter(Price.ticker_id == ticker.id).all()
 
-    if 'api' in request.url:
-            return get_response(prices, iterable=False)
+    if api in request.url:
+        return get_response(prices, iterable=False)
 
     return render_template('tickers.html',
                            ticker=ticker.name,
@@ -64,8 +67,8 @@ def insider_view(ticker):
     ticker = Ticker.query.filter(Ticker.name == ticker).first()
     insiders = InsiderTrade.query.filter(InsiderTrade.ticker_id == ticker.id).all()
 
-    if 'api' in request.url:
-            return get_response(insiders, iterable=False)
+    if api in request.url:
+        return get_response(insiders, iterable=False)
 
     return render_template('insiders.html',
                            ticker=ticker,
@@ -84,8 +87,8 @@ def one_insider_view(ticker, insider_name):
     trades = InsiderTrade.query.filter(InsiderTrade.ticker_id == ticker.id).filter(
         InsiderTrade.insider_id == one_insider.id).all()
 
-    if 'api' in request.url:
-            return get_response(trades, iterable=False)
+    if api in request.url:
+        return get_response(trades, iterable=False)
 
     return render_template('insiders.html',
                            insiders=trades,
@@ -105,9 +108,6 @@ def analytics_view(ticker):
             date_from = datetime.datetime.strptime(date_from_value, '%m-%d-%Y')
         except:
             abort(404)
-            # return render_template('analytics.html',
-            #                        title="Указаны неверные данные",
-            #                        )
         ticker = Ticker.query.filter(Ticker.name == ticker).first()  # находим нужную акцию
         price_from = Price.query.filter(Price.ticker_id == ticker.id).filter(
             Price.date == date_from).first()
@@ -120,7 +120,7 @@ def analytics_view(ticker):
             difference['low'] = round(price_from.low - price_to.low, 3)
             difference['close_last'] = round(price_from.close_last - price_to.close_last, 3)
 
-            if 'api' in request.url:
+            if api in request.url:
                 return get_response(difference)
 
             return render_template('analytics.html',
@@ -129,9 +129,6 @@ def analytics_view(ticker):
                                    )
         else:
             abort(404)
-        # return render_template('analytics.html',
-        #                        title="Данные отсутствуют",
-        #                        )
     return redirect(url_for('.ticker_view', ticker=ticker))
 
 
@@ -154,12 +151,12 @@ def delta_view(ticker):
                         results.append("%s - %s" % (cur_price.date, price.date))
                         break
 
-            if 'api' in request.url:
+            if api in request.url:
                 return get_response(results)
 
             return render_template('delta.html',
                                    title="Минимальные периоды, когда цена %s (%s) изменялась более чем на %d" % (
-                                   ticker, type, value),
+                                       ticker, type, value),
                                    results=results,
                                    )
         else:
