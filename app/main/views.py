@@ -11,6 +11,7 @@ from flask import request
 from flask import redirect
 from flask import url_for
 from flask import Response
+from flask import abort
 import json
 
 
@@ -103,9 +104,10 @@ def analytics_view(ticker):
             date_to = datetime.datetime.strptime(date_to_value, '%m-%d-%Y')
             date_from = datetime.datetime.strptime(date_from_value, '%m-%d-%Y')
         except:
-            return render_template('analytics.html',
-                                   title="Указаны неверные данные",
-                                   )
+            abort(404)
+            # return render_template('analytics.html',
+            #                        title="Указаны неверные данные",
+            #                        )
         ticker = Ticker.query.filter(Ticker.name == ticker).first()  # находим нужную акцию
         price_from = Price.query.filter(Price.ticker_id == ticker.id).filter(
             Price.date == date_from).first()
@@ -125,9 +127,11 @@ def analytics_view(ticker):
                                    difference=difference,
                                    title="Разница цен %s с %s по %s" % (ticker, date_from_value, date_to_value),
                                    )
-        return render_template('analytics.html',
-                               title="Данные отсутствуют",
-                               )
+        else:
+            abort(404)
+        # return render_template('analytics.html',
+        #                        title="Данные отсутствуют",
+        #                        )
     return redirect(url_for('.ticker_view', ticker=ticker))
 
 
@@ -158,8 +162,6 @@ def delta_view(ticker):
                                    ticker, type, value),
                                    results=results,
                                    )
-        return render_template('delta.html',
-                               title="Неправильно указаны параметры (type = open, high, low, close)",
-                               results=results,
-                               )
+        else:
+            abort(404)
     return redirect(url_for('.ticker_view', ticker=ticker))
