@@ -48,7 +48,7 @@ class InsidersSpider(scrapy.Spider):
                 item['transaction_type'] = items[2]
                 item['owner_type'] = items[3]
                 item['shares_traded'] = int(items[4].replace(',', '')) if items[4] else None
-                item['last_price'] = float(items[5]) if items[5] else None
+                item['last_price'] = float(items[5].replace(',', '')) if items[5] else None
                 item['shares_held'] = int(items[6].replace(',', '')) if items[6] else None
 
                 yield item

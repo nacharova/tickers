@@ -36,10 +36,10 @@ class TickersSpider(scrapy.Spider):
                         date = datetime.datetime.today()
 
                 item['date'] = date
-                item['open_price'] = float(cols[1]) if cols[1] else None
-                item['high'] = float(cols[2]) if cols[2] else None
-                item['low'] = float(cols[3]) if cols[3] else None
-                item['close_last'] = float(cols[4]) if cols[4] else None
+                item['open_price'] = float(cols[1].replace(',', '')) if cols[1] else None
+                item['high'] = float(cols[2].replace(',', '')) if cols[2] else None
+                item['low'] = float(cols[3].replace(',', '')) if cols[3] else None
+                item['close_last'] = float(cols[4].replace(',', '')) if cols[4] else None
                 item['volume'] = float(cols[5].replace(',', '')) if cols[5] else None
 
                 yield item

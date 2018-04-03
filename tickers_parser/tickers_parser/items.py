@@ -34,9 +34,10 @@ class TickersParserItem(ParserItem):
             ticker = Ticker(name=ticker_name)
             session.add(ticker)
             session.commit()
-        price = Price(ticker_id=ticker.id, **params)
-        session.add(price)
-        session.commit()
+        if not session.query(Price).filter(Price.ticker_id == ticker.id).filter(Price.date == params['date']).first():
+            price = Price(ticker_id=ticker.id, **params)
+            session.add(price)
+            session.commit()
 
 
 # инсайдерские сделки
@@ -66,7 +67,10 @@ class InsidersParserItem(ParserItem):
             session.add(insider)
             session.commit()
 
-        insider_trade = InsiderTrade(ticker_id=ticker.id, insider_id=insider.id, **params)
-        session.add(insider_trade)
-        session.commit()
-
+        if not session.query(InsiderTrade).filter(InsiderTrade.ticker_id == ticker.id).filter(
+                        InsiderTrade.insider_id == insider.id).filter(
+                    InsiderTrade.last_date == params['last_date']).filter(
+                    InsiderTrade.last_price == params['last_price']).first():
+            insider_trade = InsiderTrade(ticker_id=ticker.id, insider_id=insider.id, **params)
+            session.add(insider_trade)
+            session.commit()
