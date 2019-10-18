@@ -10,7 +10,7 @@ constantly==15.1.0
 cryptography==2.2.2
 cssselect==1.0.3
 dominate==2.3.1
-Flask==0.12.2
+Flask==1.0
 flask-jsontools==0.1.1.post0
 Flask-Script==2.0.6
 Flask-SQLAlchemy==2.3.2
